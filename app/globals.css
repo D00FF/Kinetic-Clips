@@ -1,26 +1,131 @@
-@import "tailwindcss";
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ----- Color System (Dark) ----- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core */
+  --kc-bg: 12 13 24;         /* near-black navy */
+  --kc-fg: 238 241 245;      /* near-white */
+
+  /* Accents */
+  --kc-accent: 56 189 248;   /* cyan-400 */
+  --kc-accent-2: 99 102 241; /* indigo-500 */
+  --kc-cta: 16 185 129;      /* emerald-500 */
+
+  /* Dark Surfaces */
+  --kc-surface: 18 20 35;
+  --kc-surface-2: 22 25 42;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--kc-bg));
+  color: rgb(var(--kc-fg));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings use Manrope via variable from next/font */
+.font-heading {
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* ----- Focus Styles (accessible, high-contrast) ----- */
+*,
+*::before,
+*::after { outline: none; }
+:focus-visible {
+  box-shadow: 0 0 0 2px rgb(var(--kc-bg)), 0 0 0 4px rgb(var(--kc-accent));
+  border-radius: 0.5rem;
+}
+
+/* ----- Background Effects (optional utilities) ----- */
+.kc-bg {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(1200px 800px at 80% -10%, rgba(56,189,248,0.14), transparent 60%),
+    radial-gradient(1000px 700px at 10% 10%, rgba(99,102,241,0.10), transparent 60%),
+    radial-gradient(900px 600px at 50% 120%, rgba(16,185,129,0.08), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
+}
+
+.kc-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(20px);
+  opacity: 0.55;
+  animation: kc-float 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Gradient text utility */
+.kc-gradient-text {
+  background-image: linear-gradient(90deg, rgb(var(--kc-accent)) 0%, rgb(var(--kc-accent-2)) 50%, rgb(var(--kc-cta)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ----- Components (dark-only surfaces) ----- */
+@layer components {
+  .section { @apply mx-auto max-w-6xl px-6 sm:px-8; }
+
+  .surface {
+    background: rgb(var(--kc-surface));
+    border-color: rgb(var(--kc-fg) / 0.10);
+    @apply border rounded-2xl;
+  }
+  .surface-2 {
+    background: rgb(var(--kc-surface-2));
+    border-color: rgb(var(--kc-fg) / 0.12);
+    @apply border rounded-2xl;
+  }
+
+  .card {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+      rgb(var(--kc-surface));
+    border-color: rgb(var(--kc-fg) / 0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    @apply rounded-2xl border p-6;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs;
+    border-color: rgb(var(--kc-fg) / 0.14);
+    background: rgb(var(--kc-fg) / 0.06);
+    @apply border;
+  }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all duration-200; }
+  .btn-cta {
+    background: linear-gradient(90deg, rgb(var(--kc-cta)), rgb(var(--kc-accent)));
+    color: rgb(var(--kc-bg));
+  }
+  .btn-cta:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: rgb(var(--kc-surface-2));
+    border-color: rgb(var(--kc-fg) / 0.16);
+    @apply border;
+  }
+  .btn-secondary:hover { background: rgb(var(--kc-surface)); }
+}
+
+/* ----- Utilities ----- */
+@layer utilities {
+  .border-subtle { border-color: rgb(var(--kc-fg) / 0.12); }
+  .text-muted { color: rgb(var(--kc-fg) / 0.85); }
+}
+
+/* ----- Keyframes ----- */
+@keyframes kc-float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-12px) translateX(8px); }
+  50% { transform: translateY(6px) translateX(-6px); }
+  75% { transform: translateY(-8px) translateX(4px); }
 }
